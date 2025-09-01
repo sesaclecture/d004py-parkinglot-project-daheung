@@ -198,7 +198,8 @@ def cmd_enter():
                 park_car_info[car_num] = {
                     "차량종류": car_cate,
                     "입차시각": car_date,
-                    "규칙": user_role
+                    "규칙": user_role,
+                    "위치": [park_row, park_col]
                 }
 
                 return
@@ -209,7 +210,8 @@ def cmd_enter():
             park_car_info[car_num] = {
                 "차량종류": car_cate,
                 "입차시각": car_date,
-                "규칙": user_role
+                "규칙": user_role,
+                "위치": [park_row - 1, park_col - 1]
             }
 
             print(f"{park_row}층 {park_col}번호에 주차가 완료되었습니다.")
@@ -238,23 +240,11 @@ def cmd_exit():
         considering_agent_cost = park_hour + 1 if (park_all_min % 60) else park_hour
         considering_agent_cost = considering_agent_cost * 3000 * agent_cost
         
-        park_car_info.pop(car_num)
-
+        pop_info = park_car_info.pop(car_num)
+        row, col = pop_info["위치"]
+        park_info[row][col] = 0
+        
         print(f"총 주차 시간: {park_hour}시간 {park_minite}분 - 총 금액: {considering_agent_cost}")
         print(f"출차가 완료되었습니다.")
 
         return
-    
-while True:
-    print_park_tower()
-    
-    user_cmd = input("원하는 기능을 선택하세요. 1)Enter 2)Exit 3)Quit")
-    quit_cmd = ["quit", "Quit", "Q", "q"]
-    if (user_cmd in quit_cmd):
-        print("Okey, goodbye.")
-        break
-
-    match user_cmd:
-        case "Enter": cmd_enter()
-        case "Exit" : cmd_exit ()
-    
